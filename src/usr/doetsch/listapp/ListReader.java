@@ -40,4 +40,38 @@ public class ListReader {
 		return list.getSubLists().size();
 	}
 	
+	public String printList (List list) {
+		return printList(list, "");
+	}
+	
+	private String printList (List list, String tab) {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(tab + list.getTitle() + ": " + list.getDescription());
+		
+		sb.append("[");
+		sb.append(isFinished(list));
+//		sb.append(list.isMarked());
+		sb.append(", ");
+		sb.append(list.isUrgent());
+		sb.append(", ");
+		sb.append(list.getDeadline());
+
+		sb.append("] ");
+		
+		
+		sb.append("(");
+		sb.append(list.getSubLists().size());
+		sb.append(")\n");
+		
+		for (List l : list.getSubLists()) {
+			sb.append(printList(l, tab + "    "));
+		}
+		
+		
+		return sb.toString();
+	}
+	
+	
+	
 }

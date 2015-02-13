@@ -10,6 +10,7 @@ public class List implements Iterable<List> {
 	private String description;
 	private boolean urgent;
 	private boolean marked;
+	private String deadline;
 	private Collection<List> subLists;
 	
 	List (String title) {
@@ -60,6 +61,14 @@ public class List implements Iterable<List> {
 		this.marked = isCompleted;
 	}
 	
+	public String getDeadline() {
+		return deadline;
+	}
+
+	public void setDeadline(String deadline) {
+		this.deadline = deadline;
+	}
+
 	public Collection<List> getSubLists () {
 		return subLists;
 	}

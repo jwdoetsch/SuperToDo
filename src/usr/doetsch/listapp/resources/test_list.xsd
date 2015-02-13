@@ -1,0 +1,18 @@
+<listapp:schema xmlns:listapp="http://www.w3.org/2001/XMLSchema">
+
+	<listapp:element name="headlist" type="listtype" />
+	
+	<listapp:complexType name="listtype">
+		<listapp:sequence>
+			<listapp:element name="list" type="listtype" maxOccurs="unbounded" minOccurs="0" />
+		</listapp:sequence>
+		<listapp:attribute name="title" type="listapp:string" />
+		<listapp:attribute name="desc" type="listapp:string" />
+		<listapp:attribute name="deadline" type="listapp:date" />
+		<listapp:attribute name="isUrgent" type="listapp:boolean" />
+		<listapp:attribute name="isMarked" type="listapp:boolean" />
+
+
+	</listapp:complexType>
+
+</listapp:schema>
