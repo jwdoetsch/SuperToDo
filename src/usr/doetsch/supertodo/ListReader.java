@@ -23,10 +23,19 @@ public class ListReader {
 		return (list.getSubLists().size() > 0);		
 	}
 	
+	/**
+	 * Determines whether or not the given list contains
+	 * urgent sublists/items
+	 * 
+	 * @param list
+	 * @return
+	 */
 	public boolean hasUrgentItems (List list) {
+
 		if (hasSubLists(list)) {
 			for (List sublist : list) {
-				if (hasUrgentItems(sublist)) {
+				
+				if (sublist.isUrgent() || hasUrgentItems(sublist)) {
 					return true;
 				}
 			}
@@ -41,18 +50,9 @@ public class ListReader {
 	}
 	
 	public int getListCount (List headlist) {
-//		if (hasSubLists(headlist)) {
-//			int counter = 1;
-//			for (List sublist : headlist.getSubLists()) {
-//				counter += getListCount(sublist);
-//			}
-//			return counter;
-//			
-//		} else {
-//			return 0;
-//		}
-		
 		int i = 0;
+		
+		//count the current list and any non-item sub lists
 		for (List sublist : headlist.getSubLists()) {
 			if (hasSubLists(sublist)) {
 				i += 1 + getListCount(sublist);
@@ -60,10 +60,11 @@ public class ListReader {
 		}
 		
 		return i;
-		
 	}
 	
 	public int getItemCount (List headlist) {
+		
+		//count the items in each list, provided this list has items
 		if (hasSubLists(headlist)) {
 			
 			int counter = 0;

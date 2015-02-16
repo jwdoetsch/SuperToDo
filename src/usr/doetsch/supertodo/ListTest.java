@@ -18,51 +18,28 @@ public class ListTest {
 	@Test
 	public void test() {
 		
+		ListFactory f = new ListFactory();
 		ListReader lr = new ListReader();
-		List l1 = new List("List 1");
-		List l2 = new List("List 2");
-		List l3 = new List("List 3");
-		List l4 = new List("List 4");
+		List l1 = f.createList("HEAD");
+		List l2 = f.createList("1");
+		List l3 = f.createList("2");
 		
 		l1.addSubList(l2);
 		l1.addSubList(l3);
 		
-		l2.addSubList(l4);
-		
-		assertTrue(lr.hasSubLists(l1));
-		assertTrue(lr.hasSubLists(l2));
-		assertFalse(lr.hasSubLists(l3));
-		assertFalse(lr.hasSubLists(l4));
-		
-		assertFalse(lr.isComplete(l1));
-		assertFalse(lr.isComplete(l2));
-		assertFalse(lr.isComplete(l3));
-		assertFalse(lr.isComplete(l4));
-		
-		l4.setMarked(true);
-		assertFalse(lr.isComplete(l1));
-		assertTrue(lr.isComplete(l2));
-		assertFalse(lr.isComplete(l3));
-		assertTrue(lr.isComplete(l4));
-		
-		l3.setMarked(true);
-		
-		assertTrue(lr.isComplete(l1));
-		
-		//l4.addSubList(new List(""));
-		
-		//assertFalse(lr.isCompleted(l1));
+		System.out.println(l1);
 		
 		assertFalse(lr.hasUrgentItems(l1));
 		
-		l4.setUrgent(true);
+		l3.setUrgent(true);
 		
-		assertTrue(l4.isUrgent());
-		assertTrue(lr.hasUrgentItems(l4));
 		assertTrue(lr.hasUrgentItems(l1));
 		
-		l4.setMarked(false);
-		System.out.println(l1);
+		l3.addSubList(f.createList(""));
+		l3.addSubList(f.createList(""));
+		
+		assertTrue(lr.hasUrgentItems(l1));
+		
 		
 	}
 

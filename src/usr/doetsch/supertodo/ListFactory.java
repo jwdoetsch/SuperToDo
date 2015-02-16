@@ -39,11 +39,12 @@ public class ListFactory {
 	}
 	
 	public List createList (String title) {
-		return createList(title, "", false, false);
+		return createList(title, "", false, false, "");
 	}
 	
-	public List createList (String title, String description, boolean isUrgent, boolean isMarked) {
-		return new List(title, description, isUrgent, isMarked);
+	public List createList (String title, String description,
+			boolean isUrgent, boolean isMarked, String deadline) {
+		return new List(title, description, isUrgent, isMarked, deadline);
 	}
 	
 
@@ -73,7 +74,7 @@ public class ListFactory {
                 "http://www.w3.org/2001/XMLSchema");
 		docBuilderFactory.setAttribute(
 				"http://java.sun.com/xml/jaxp/properties/schemaSource",
-				ListFactory.class.getResource("resources/listSchema.xsd").openStream());
+				ListFactory.class.getResource("resources/supertodo.xsd").openStream());
 		
 		docBuilder = docBuilderFactory.newDocumentBuilder();
 		docBuilder.setErrorHandler(new ErrorHandlerAdapter());

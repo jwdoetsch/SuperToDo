@@ -30,6 +30,7 @@ class List implements Iterable<List> {
 		setDescription("");
 		setUrgent(false);
 		setMarked(false);
+		setDeadline("");
 		subLists = new ArrayList<List>();
 	}
 	
@@ -42,11 +43,12 @@ class List implements Iterable<List> {
 	 * @param isUrgent the list's urgency flag (true if urgent)
 	 * @param isMarked the list's marked flag (true if marked)
 	 */
-	List  (String title, String description, boolean isUrgent, boolean isMarked) {
+	List  (String title, String description, boolean isUrgent, boolean isMarked, String deadline) {
 		setTitle(title);
 		setDescription(description);
 		setUrgent(isUrgent);
 		setMarked(isMarked);
+		setDeadline(deadline);
 		subLists = new ArrayList<List>();
 	}
 
