@@ -9,8 +9,6 @@ import java.util.Iterator;
  * item. The items are called lists whereas a list
  * item with sub-items would be considered a list itself.  
  * 
- *  
- * 
  * @author Jacob Wesley Doetsch
  */
 class List implements Iterable<List> {

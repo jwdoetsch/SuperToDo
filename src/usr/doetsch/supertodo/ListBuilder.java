@@ -83,7 +83,7 @@ public class ListBuilder {
                 "http://www.w3.org/2001/XMLSchema");
 		docBuilderFactory.setAttribute(
 				"http://java.sun.com/xml/jaxp/properties/schemaSource",
-				ListValidator.class.getResource("resources/listSchema.xsd").openStream());
+				ListBuilder.class.getResource("resources/listSchema.xsd").openStream());
 		
 		docBuilder = docBuilderFactory.newDocumentBuilder();
 		docBuilder.setErrorHandler(new ErrorHandlerAdapter());
@@ -141,7 +141,7 @@ public class ListBuilder {
 		
 		} catch (IOException e) {
 			e.printStackTrace();
-
+			
 		} catch (SAXException e) {
 			e.printStackTrace();
 		
