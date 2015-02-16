@@ -1,24 +1,11 @@
 package usr.doetsch.supertodo;
 
-//import java.io.File;
 import java.io.IOException;
-//import java.net.URI;
 import java.net.URL;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-//import javax.xml.transform.OutputKeys;
-//import javax.xml.transform.Transformer;
-//import javax.xml.transform.TransformerConfigurationException;
-//import javax.xml.transform.TransformerException;
-//import javax.xml.transform.TransformerFactory;
-//import javax.xml.transform.TransformerFactoryConfigurationError;
-//import javax.xml.transform.dom.DOMSource;
-//import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -28,6 +15,10 @@ import org.xml.sax.SAXParseException;
 
 public class ListFactory {
 
+	/*
+	 * ErrorHandlerAdapter forwards the associated exceptions
+	 * to within the scope of the parent DocumentBuilder.
+	 */
 	private class ErrorHandlerAdapter implements ErrorHandler {
 
 		@Override
@@ -55,8 +46,6 @@ public class ListFactory {
 		return new List(title, description, isUrgent, isMarked);
 	}
 	
-	
-	
 
 	/*
 	 * Validates and returns a Document representation of
@@ -76,6 +65,7 @@ public class ListFactory {
 		DocumentBuilder docBuilder;
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		
+		//configure the factory for validation against the supertodo schema
 		docBuilderFactory.setNamespaceAware(true);
 		docBuilderFactory.setValidating(true);
 		docBuilderFactory.setAttribute(
@@ -89,8 +79,6 @@ public class ListFactory {
 		docBuilder.setErrorHandler(new ErrorHandlerAdapter());
 		doc = docBuilder.parse(path.openStream());
 		doc.normalize();
-		
-		
 		
 		return buildList(doc.getDocumentElement());
 

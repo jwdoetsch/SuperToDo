@@ -1,0 +1,18 @@
+<supertodo:schema xmlns:supertodo="http://www.w3.org/2001/XMLSchema">
+
+	<supertodo:element name="headlist" type="listtype" />
+	
+	<supertodo:complexType name="listtype">
+		<supertodo:sequence>
+			<supertodo:element name="list" type="listtype" maxOccurs="unbounded" minOccurs="0" />
+		</supertodo:sequence>
+		<supertodo:attribute name="title" type="supertodo:string" />
+		<supertodo:attribute name="desc" type="supertodo:string" />
+		<supertodo:attribute name="deadline" type="supertodo:date" />
+		<supertodo:attribute name="isUrgent" type="supertodo:boolean" />
+		<supertodo:attribute name="isMarked" type="supertodo:boolean" />
+
+
+	</supertodo:complexType>
+
+</supertodo:schema>
