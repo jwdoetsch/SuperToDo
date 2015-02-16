@@ -1,4 +1,4 @@
-package usr.doetsch.listapp;
+package usr.doetsch.supertodo;
 
 import java.util.ArrayList;
 import java.util.Collection;

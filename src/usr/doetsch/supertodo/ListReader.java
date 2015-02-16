@@ -1,4 +1,4 @@
-package usr.doetsch.listapp;
+package usr.doetsch.supertodo;
 
 public class ListReader {
 
