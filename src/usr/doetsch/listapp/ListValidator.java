@@ -17,58 +17,131 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.w3c.dom.Document;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class ListValidator {
 	
-	private ListValidator () {
-		
-	}
-	
-	public static ListValidator newInstance () {
-		return new ListValidator();
-	}
-	
-	public boolean validate (URL schemaPath, URI uri) {
-		
-		try {
-			SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema s = sf.newSchema(schemaPath);
-			
-			Validator v = s.newValidator();
-			v.validate(new StreamSource(new File(uri)));
-		} catch (SAXException| IOException e) {
-			e.printStackTrace();
-			return false;
+	private class ErrorHandlerAdapter implements ErrorHandler {
+
+		@Override
+		public void error(SAXParseException exception) throws SAXException {
+			throw new SAXException(exception);
+		}
+
+		@Override
+		public void fatalError(SAXParseException exception) throws SAXException {
+			throw new SAXException(exception);
+		}
+
+		@Override
+		public void warning(SAXParseException exception) throws SAXException {
+			throw new SAXException(exception);
 		}
 		
-		return true;
 	}
+	
+
+	/**
+	 * Validates and returns a Document representation of
+	 * the target XML list document.
+	 * 
+	 * 
+	 * @param docPath
+	 * @return
+	 * @throws IOException
+	 */
+	public Document validate (URL docPath) throws IOException {
+	
+		Document doc;
+		DocumentBuilder docBuilder;
+		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+		
+		docBuilderFactory.setNamespaceAware(true);
+		docBuilderFactory.setValidating(true);
+		docBuilderFactory.setAttribute(
+                "http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+                "http://www.w3.org/2001/XMLSchema");
+		docBuilderFactory.setAttribute(
+				"http://java.sun.com/xml/jaxp/properties/schemaSource",
+				ListValidator.class.getResource("resources/listSchema.xsd").openStream());
+		
+		try {
+			docBuilder = docBuilderFactory.newDocumentBuilder();
+			docBuilder.setErrorHandler(new ErrorHandlerAdapter());
+			doc = docBuilder.parse(docPath.openStream());
+			return doc;
+			
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		
+		
+		
+	}
+	
 	
 	
 	public static void main (String[] args) throws IOException {
 		
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		dbf.setNamespaceAware(true);
-		dbf.setValidating(true);
-		dbf.setAttribute(
-                "http://java.sun.com/xml/jaxp/properties/schemaLanguage",
-                "http://www.w3.org/2001/XMLSchema");
-		dbf.setAttribute(
-				"http://java.sun.com/xml/jaxp/properties/schemaSource",
-				ListValidator.class.getResource("resources/test_list.xsd").openStream());
+		ListValidator validator = new ListValidator();
 		
-		DocumentBuilder db;
-		try {
-			db = dbf.newDocumentBuilder();
-			Document d = db.parse(ListValidator.class.getResource("resources/test_list.xml").openStream());
-			System.out.println(d);
-			System.out.println("Passed validation.");
-			return;
-		} catch (IllegalArgumentException | ParserConfigurationException | IOException | SAXException e) {
-			System.out.println("Failed validation: " + e.toString());
-			return;
-		}
+		System.out.println(validator.validate(ListValidator.class.getResource("resources/test_list.xml")));
+		
+//		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+//		dbf.setNamespaceAware(true);
+//		dbf.setValidating(true);
+//		dbf.setAttribute(
+//                "http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+//                "http://www.w3.org/2001/XMLSchema");
+//		dbf.setAttribute(
+//				"http://java.sun.com/xml/jaxp/properties/schemaSource",
+//				ListValidator.class.getResource("resources/listSchema.xsd").openStream());
+//		
+//		DocumentBuilder db;
+//		try {
+//			db = dbf.newDocumentBuilder();
+//			db.setErrorHandler(new ErrorHandler() {
+//
+//				@Override
+//				public void error(SAXParseException arg0) throws SAXException {
+//					throw new SAXException(arg0);
+//				}
+//
+//				@Override
+//				public void fatalError(SAXParseException arg0)
+//						throws SAXException {
+//					throw new SAXException(arg0);
+//					
+//				}
+//
+//				@Override
+//				public void warning(SAXParseException arg0) throws SAXException {
+//					throw new SAXException(arg0);
+//				
+//				}
+//				
+//			});
+//			
+//			Document d = db.parse(ListValidator.class.getResource("resources/test_list.xml").openStream());
+//			
+//			System.out.println(d);
+//			System.out.println("Passed validation.");
+//			return;
+//		} catch (IllegalArgumentException | ParserConfigurationException | IOException | SAXException e) {
+//			//System.out.println("Failed validation: " + e.toString() + e.);
+//			if (e instanceof SAXException) {
+//				System.out.println("Failed: " + e.getMessage());
+//			}
+//			return;
+//		}
 
 	}
 

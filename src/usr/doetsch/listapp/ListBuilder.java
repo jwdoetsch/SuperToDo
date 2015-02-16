@@ -1,31 +1,52 @@
 package usr.doetsch.listapp;
 
-import java.io.File;
+//import java.io.File;
 import java.io.IOException;
-import java.net.URI;
+//import java.net.URI;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+//import javax.xml.transform.OutputKeys;
+//import javax.xml.transform.Transformer;
+//import javax.xml.transform.TransformerConfigurationException;
+//import javax.xml.transform.TransformerException;
+//import javax.xml.transform.TransformerFactory;
+//import javax.xml.transform.TransformerFactoryConfigurationError;
+//import javax.xml.transform.dom.DOMSource;
+//import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class ListBuilder {
 
+	private class ErrorHandlerAdapter implements ErrorHandler {
+
+		@Override
+		public void error(SAXParseException exception) throws SAXException {
+			throw new SAXException(exception);
+		}
+
+		@Override
+		public void fatalError(SAXParseException exception) throws SAXException {
+			throw new SAXException(exception);
+		}
+
+		@Override
+		public void warning(SAXParseException exception) throws SAXException {
+			throw new SAXException(exception);
+		}
+		
+	}
+	
 	public List createList (String title) {
 		return createList(title, "", false, false);
 	}
@@ -34,26 +55,56 @@ public class ListBuilder {
 		return new List(title, description, isUrgent, isMarked);
 	}
 	
-	public List parseList (URL path) throws SAXException, IOException, ParserConfigurationException {
-		List list = createList("");
-		Element headElement;
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	
+	
+
+	/*
+	 * Validates and returns a Document representation of
+	 * the target XML list document.
+	 * 
+	 * @param path the URL specifying the target document's path
+	 * @return the Document representation of the target document
+	 * @throws IOException if the URL can't be resolved
+	 * @throws SAXException if the document isn't well-formed and/or
+	 * doesn't follow the listapp schema
+	 * @throws ParserConfigurationException if the local listapp schema
+	 * resources is inaccessible 
+	 */
+	public List parse (URL path) throws IOException, SAXException, ParserConfigurationException {
+	
+		Document doc;
+		DocumentBuilder docBuilder;
+		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		
-		factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource",
-				ListBuilder.class.getResource("resources/newlist.xsd").toString());
+		docBuilderFactory.setNamespaceAware(true);
+		docBuilderFactory.setValidating(true);
+		docBuilderFactory.setAttribute(
+                "http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+                "http://www.w3.org/2001/XMLSchema");
+		docBuilderFactory.setAttribute(
+				"http://java.sun.com/xml/jaxp/properties/schemaSource",
+				ListValidator.class.getResource("resources/listSchema.xsd").openStream());
 		
-		Document xmlDoc = factory.newDocumentBuilder().parse(path.toString());
+		docBuilder = docBuilderFactory.newDocumentBuilder();
+		docBuilder.setErrorHandler(new ErrorHandlerAdapter());
+		doc = docBuilder.parse(path.openStream());
+		doc.normalize();
 		
-		xmlDoc.getDocumentElement().normalize();
 		
-		headElement = xmlDoc.getDocumentElement();
 		
-		list = buildList(headElement);
-		
-		return list;
+		return buildList(doc.getDocumentElement());
+
 	}
 	
+		
+	/*
+	 * Returns a List representation of the given XML document Node
+	 * 
+	 * @param n the Node to represent
+	 * @return the List representation
+	 */
 	private List buildList (Node n) {
+		
 		List list = createList("");
 		NodeList children = n.getChildNodes();
 		NamedNodeMap attributes = n.getAttributes();
@@ -74,11 +125,29 @@ public class ListBuilder {
 		return list;
 	}
 	
-	public static void main (String[] args) throws SAXException, IOException, ParserConfigurationException {
+	
+	public static void main (String[] args) {
+		
 		ListBuilder lb = new ListBuilder();
-		ListReader lr = new ListReader();
-		System.out.println(lr.printList(lb.parseList(ListBuilder.class.getResource("resources/newlist.xml"))));
+		try {
+			List l = lb.parse(ListBuilder.class.getResource("resources/test_list.xml"));
+			System.out.println(l);
+			
+			ListReader r = new ListReader();
+			
+			System.out.println(r.getListCount(l));
+			System.out.println(r.getItemCount(l));
+			
+		
+		} catch (IOException e) {
+			e.printStackTrace();
+
+		} catch (SAXException e) {
+			e.printStackTrace();
+		
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
 		
 	}
-	
 }

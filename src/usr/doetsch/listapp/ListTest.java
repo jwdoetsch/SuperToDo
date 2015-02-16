@@ -62,7 +62,7 @@ public class ListTest {
 		assertTrue(lr.hasUrgentItems(l1));
 		
 		l4.setMarked(false);
-		System.out.println(lr.printList(l1));
+		System.out.println(l1);
 		
 	}
 

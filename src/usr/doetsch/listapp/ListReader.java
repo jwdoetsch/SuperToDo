@@ -40,38 +40,42 @@ public class ListReader {
 		return list.getSubLists().size();
 	}
 	
-	public String printList (List list) {
-		return printList(list, "");
-	}
-	
-	private String printList (List list, String tab) {
-		StringBuilder sb = new StringBuilder();
+	public int getListCount (List headlist) {
+//		if (hasSubLists(headlist)) {
+//			int counter = 1;
+//			for (List sublist : headlist.getSubLists()) {
+//				counter += getListCount(sublist);
+//			}
+//			return counter;
+//			
+//		} else {
+//			return 0;
+//		}
 		
-		sb.append(tab + list.getTitle() + ": " + list.getDescription());
-		
-		sb.append("[");
-		sb.append(isFinished(list));
-//		sb.append(list.isMarked());
-		sb.append(", ");
-		sb.append(list.isUrgent());
-		sb.append(", ");
-		sb.append(list.getDeadline());
-
-		sb.append("] ");
-		
-		
-		sb.append("(");
-		sb.append(list.getSubLists().size());
-		sb.append(")\n");
-		
-		for (List l : list.getSubLists()) {
-			sb.append(printList(l, tab + "    "));
+		int i = 0;
+		for (List sublist : headlist.getSubLists()) {
+			if (hasSubLists(sublist)) {
+				i += 1 + getListCount(sublist);
+			}
 		}
 		
+		return i;
 		
-		return sb.toString();
 	}
 	
-	
-	
+	public int getItemCount (List headlist) {
+		if (hasSubLists(headlist)) {
+			
+			int counter = 0;
+			for (List sublist : headlist.getSubLists()) {
+				counter += getItemCount(sublist);
+			}
+			
+			return counter;
+			
+		} else {
+			return 1;
+		}
+	}
+
 }
