@@ -198,13 +198,7 @@ class List implements Iterable<List> {
 			sb.append(toString(l, tab + "    "));
 		}
 		
-		
 		return sb.toString();
-	}
-	
-	public static void main (String[] args) {
-		List l = new List("");
-		
 	}
 	
 }

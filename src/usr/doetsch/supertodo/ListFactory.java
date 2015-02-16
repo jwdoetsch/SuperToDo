@@ -26,7 +26,7 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-public class ListBuilder {
+public class ListFactory {
 
 	private class ErrorHandlerAdapter implements ErrorHandler {
 
@@ -83,7 +83,7 @@ public class ListBuilder {
                 "http://www.w3.org/2001/XMLSchema");
 		docBuilderFactory.setAttribute(
 				"http://java.sun.com/xml/jaxp/properties/schemaSource",
-				ListBuilder.class.getResource("resources/listSchema.xsd").openStream());
+				ListFactory.class.getResource("resources/listSchema.xsd").openStream());
 		
 		docBuilder = docBuilderFactory.newDocumentBuilder();
 		docBuilder.setErrorHandler(new ErrorHandlerAdapter());
@@ -128,9 +128,9 @@ public class ListBuilder {
 	
 	public static void main (String[] args) {
 		
-		ListBuilder lb = new ListBuilder();
+		ListFactory lb = new ListFactory();
 		try {
-			List l = lb.parse(ListBuilder.class.getResource("resources/test_list.xml"));
+			List l = lb.parse(ListFactory.class.getResource("resources/test_list.xml"));
 			System.out.println(l);
 			
 			ListReader r = new ListReader();
